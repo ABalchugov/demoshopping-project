@@ -34,7 +34,7 @@ class RegistrationPage(PageFactory):
 
     @allure.step("Заполнить поле Пароль значением: {password}")
     def fill_password_field(self, password):
-        self.password_locator.send_keys(password)
+        self.password_locator.set_text(password)
 
     @allure.step("Нажать кнопку Зарегистрироваться")
     def click_registration_button(self):
