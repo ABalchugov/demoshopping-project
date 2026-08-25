@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 
 from pages.registration_page import RegistrationPage
 
+
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Успешная регистрация")
@@ -35,6 +36,7 @@ def test_positive_registration(
 
     with allure.step("Проверить отображение блока результатов"):
         assert msg_is_displayed is True, "Регистрация не успешна"
+
 
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
@@ -66,10 +68,11 @@ def test_wrong_login_field_registration(
     with allure.step("Проверить отображение блока результатов"):
         assert msg_is_displayed is True, "Регистрация прошла с некорректным логином"
 
+
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Неуспешная регистрация")
-@allure.title("Отправка формы с некорректным логином")
+@allure.title("Отправка формы с некорректным паролем")
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.smoke
 @pytest.mark.regress
@@ -98,10 +101,11 @@ def test_wrong_password_field_registration(
     with allure.step("Проверить отображение блока результатов"):
         assert msg_is_displayed is True, "Регистрация прошла с некорректным паролем"
 
+
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Неуспешная регистрация")
-@allure.title("Отправка формы с некорректным логином")
+@allure.title("Отправка формы с некорректным логином и паролем")
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.smoke
 @pytest.mark.regress
