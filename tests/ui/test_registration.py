@@ -2,7 +2,6 @@ import random
 
 import pytest
 import allure
-from selenium.webdriver.common.by import By
 
 from pages.registration_page import RegistrationPage
 
