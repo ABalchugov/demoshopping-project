@@ -10,7 +10,7 @@ class FilterPage(PageFactory):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 5)
-        self.url = os.getenv("TEST_URL")
+        self.url = os.getenv("TEST_UI_URL")
         self.locators = {
             "min_price_locator": ('ID', "min-price"),
             "max_price_locator": ('ID', "max-price"),

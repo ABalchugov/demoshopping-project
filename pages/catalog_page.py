@@ -11,7 +11,7 @@ class CatalogPage(PageFactory):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 5)
-        self.url = os.getenv("TEST_URL")
+        self.url = os.getenv("TEST_UI_URL")
         self.locators = {
             "product_list_locator": ('ID', "product-list"),
             "first_card_in_product_list_locator": ('xpath', '//*[@id="product-list"]/div[1]')

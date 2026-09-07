@@ -8,7 +8,7 @@ def load_env():
     load_dotenv()
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="function")
 def driver():
     driver = webdriver.Chrome()
     driver.maximize_window()
