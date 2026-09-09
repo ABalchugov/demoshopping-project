@@ -11,6 +11,7 @@ API_URL = os.getenv("TEST_API_URL")
 USERNAME = "avbalchugov1"
 PASSWORD = "password1"
 
+
 @allure.epic("API Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Успешная регистрация")
