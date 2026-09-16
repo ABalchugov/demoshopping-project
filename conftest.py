@@ -80,9 +80,10 @@ def driver(request):
 
     yield driver
 
-    attach.add_html(driver)
-    attach.add_screenshot(driver)
-    attach.add_logs(driver)
-    attach.add_video(driver)
-
-    driver.quit()
+    try:
+        attach.add_html(driver)
+        attach.add_screenshot(driver)
+        attach.add_logs(driver)
+        attach.add_video(driver)
+    finally:
+        driver.quit()
