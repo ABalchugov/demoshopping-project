@@ -1,4 +1,5 @@
 import os
+import json
 import allure
 from allure_commons.types import AttachmentType
 
@@ -31,3 +32,65 @@ def add_video(driver):
            + video_url \
            + "' type='video/mp4'></video></body></html>"
     allure.attach(html, 'video_' + driver.session_id, AttachmentType.HTML, '.html')
+
+
+def attach_api_response(response):
+    request = response.request
+
+    allure.attach(
+        request.method,
+        name="Request method",
+        attachment_type=allure.attachment_type.TEXT
+    )
+
+    allure.attach(
+        request.url,
+        name="Request URL",
+        attachment_type=allure.attachment_type.URI_LIST
+    )
+
+    if request.headers:
+        allure.attach(
+            json.dumps(
+                dict(request.headers),
+                indent=4,
+                ensure_ascii=False
+            ),
+            name="Request headers",
+            attachment_type=allure.attachment_type.JSON
+        )
+
+    if request.body:
+        body = request.body
+
+        if isinstance(body, bytes):
+            body = body.decode("utf-8")
+
+        allure.attach(
+            body,
+            name="Request body",
+            attachment_type=allure.attachment_type.JSON
+        )
+
+    allure.attach(
+        str(response.status_code),
+        name="Response status code",
+        attachment_type=allure.attachment_type.TEXT
+    )
+
+    try:
+        allure.attach(
+            json.dumps(
+                response.json(),
+                indent=4,
+                ensure_ascii=False
+            ),
+            name="Response body",
+            attachment_type=allure.attachment_type.JSON
+        )
+    except ValueError:
+        allure.attach(
+            response.text,
+            name="Response body",
+            attachment_type=allure.attachment_type.TEXT
+        )

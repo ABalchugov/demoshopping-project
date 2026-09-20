@@ -18,7 +18,7 @@ PASSWORD = "password1"
 @allure.story("Успешная регистрация")
 @allure.title("Отправка формы с корректными логином и паролем")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_successful_registration():
+def test_successful_registration(attach_api):
     request_body = {"username": USERNAME, "password": PASSWORD}
 
     response = requests.post(f"{API_URL}/register", json=request_body)
@@ -26,7 +26,7 @@ def test_successful_registration():
     print("\nStatus code:", response.status_code)
     print("Headers:", response.headers)
     print("Body:", response.text)
-
+    attach_api(response)
     assert response.status_code == 200
 
     body = response.json()
@@ -48,4 +48,5 @@ def test_successful_registration():
     assert user_id is not None, f"Пользователь с логином '{USERNAME}' не найден"
 
     response_delete_user = requests.delete(f"{API_URL}/users/{user_id}")
+    attach_api(response_delete_user)
     assert response_delete_user.status_code is 200

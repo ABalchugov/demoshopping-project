@@ -19,11 +19,12 @@ TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 @allure.story("Успешная авторизация")
 @allure.title("Отправка формы с корректными логином и паролем")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_successful_auth():
+def test_successful_auth(attach_api):
     request_body = {"username": USERNAME, "password": PASSWORD}
 
     response = requests.post(f"{API_URL}/login", json=request_body)
 
+    attach_api(response)
     print("\nStatus code:", response.status_code)
     print("Headers:", response.headers)
     print("Body:", response.text)

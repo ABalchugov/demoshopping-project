@@ -87,3 +87,7 @@ def driver(request):
         attach.add_video(driver)
     finally:
         driver.quit()
+
+@pytest.fixture
+def attach_api():
+    return attach.attach_api_response
