@@ -12,6 +12,7 @@ USERNAME = "avbalchugov1"
 PASSWORD = "password1"
 
 
+@allure.label("layer", "API Tests")
 @allure.epic("API Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Успешная регистрация")

@@ -12,6 +12,7 @@ load_dotenv()
 API_URL = os.getenv("TEST_API_URL")
 
 
+@allure.label("layer", "API Tests")
 @allure.epic("API Automation")
 @allure.feature("Каталог продуктов")
 @allure.title("Получить список всех продуктов")
@@ -29,6 +30,7 @@ def test_get_products():
     validate(body, schema=products_schema)
 
 
+@allure.label("layer", "API Tests")
 @allure.epic("API Automation")
 @allure.feature("Каталог продуктов")
 @allure.title("Добавление нового продукта")
@@ -43,6 +45,7 @@ def test_add_product():
     assert delete_response["status"] == 200
 
 
+@allure.label("layer", "API Tests")
 @allure.epic("API Automation")
 @allure.feature("Каталог продуктов")
 @allure.title("Удаление продукта по ID")
@@ -59,6 +62,7 @@ def test_delete_product():
     assert delete_response["body"] == "Товар удалён"
 
 
+@allure.label("layer", "API Tests")
 @allure.epic("API Automation")
 @allure.feature("Каталог продуктов")
 @allure.title("Частичное обновление товара по ID")

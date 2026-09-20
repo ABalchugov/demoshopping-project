@@ -6,6 +6,7 @@ import allure
 from pages.registration_page import RegistrationPage
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Успешная регистрация")
@@ -37,6 +38,7 @@ def test_positive_registration(
         assert msg_is_displayed is True, "Регистрация не успешна"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Неуспешная регистрация")
@@ -68,6 +70,7 @@ def test_wrong_login_field_registration(
         assert msg_is_displayed is True, "Регистрация прошла с некорректным логином"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Неуспешная регистрация")
@@ -101,6 +104,7 @@ def test_wrong_password_field_registration(
         assert msg_is_displayed is True, "Регистрация прошла с некорректным паролем"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Неуспешная регистрация")

@@ -7,6 +7,7 @@ from pages.filter_page import FilterPage
 from pages.catalog_page import CatalogPage
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Каталог")
 @allure.story("Фильтры")
@@ -48,6 +49,7 @@ def test_min_price_filter(driver, price):
         allure.attach("Список пуст — нет товаров с ценой ниже заданной", name="Инфо")
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Каталог")
 @allure.story("Фильтры")
@@ -91,6 +93,7 @@ def test_max_price_filter(
         allure.attach("Список пуст — нет товаров с ценой выше заданной", name="Инфо")
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Каталог")
 @allure.story("Фильтры")
@@ -130,6 +133,7 @@ def test_category_filter(
         assert params["category"] == category, "Категория в карточке не соответствует фильтру"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Каталог")
 @allure.story("Фильтры")
@@ -170,6 +174,7 @@ def test_manufacturer_filter(
         assert params["manufacturer"] == manufacturer, "Производитель в карточке не соответствует фильтру"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Каталог")
 @allure.story("Фильтры")
@@ -196,6 +201,7 @@ def test_free_shipping_checkbox_filter(driver):
     assert params["free_shipping"] == "Да", "Карточка не соответствует фильтру бесплатная доставка"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Каталог")
 @allure.story("Фильтры")

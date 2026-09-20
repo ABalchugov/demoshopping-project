@@ -4,6 +4,7 @@ import allure
 from pages.login_page import LoginPage
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма логина")
 @allure.story("Успешная авторизация")
@@ -33,6 +34,7 @@ def test_positive_authorization(
         assert form.is_redirected(), "Редиректа не произошло"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма логина")
 @allure.story("Неуспешная авторизация")
@@ -62,6 +64,7 @@ def test_non_existed_user_authorization(
         assert form.non_existed_user_msg_is_displayed() is True, "Удалось авторизовать невалидного пользователя"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма логина")
 @allure.story("Неуспешная авторизация")
@@ -93,6 +96,7 @@ def test_wrong_login_field_authorization(
         assert msg_is_displayed is True, "Авторизация прошла с некорректным логином"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма логина")
 @allure.story("Неуспешная авторизация")
@@ -126,6 +130,7 @@ def test_wrong_password_field_authorization(
         assert msg_is_displayed is True, "Авторизация прошла с некорректным паролем"
 
 
+@allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма логина")
 @allure.story("Неуспешная авторизация")

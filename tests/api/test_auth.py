@@ -13,6 +13,7 @@ PASSWORD = "password12"
 TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 
 
+@allure.label("layer", "API Tests")
 @allure.epic("API Automation")
 @allure.feature("Форма логина")
 @allure.story("Успешная авторизация")
