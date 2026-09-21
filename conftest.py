@@ -37,7 +37,7 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="function")
 def driver(request):
     browser = request.config.getoption("--browser")
     browser_version = request.config.getoption("--browser_version")
