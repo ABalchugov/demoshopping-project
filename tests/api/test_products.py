@@ -37,13 +37,13 @@ def test_get_products(attach_api):
 @allure.severity(allure.severity_level.NORMAL)
 def test_add_product(attach_api):
     response = create_product(API_URL)
-    attach_api(response)
+    attach_api(response["original_response"])
     assert response["status"] == 200
     assert response["body"].startswith("Продукт успешно добавлен с ID:")
 
     product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
     delete_response = delete_product(API_URL, product_id)
-    attach_api(delete_response)
+    attach_api(delete_response["original_response"])
     assert delete_response["status"] == 200
 
 
@@ -54,14 +54,14 @@ def test_add_product(attach_api):
 @allure.severity(allure.severity_level.NORMAL)
 def test_delete_product(attach_api):
     response = create_product(API_URL)
-    attach_api(response)
+    attach_api(response["original_response"])
     assert response["status"] == 200
 
     product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
 
     delete_response = delete_product(API_URL, product_id)
 
-    attach_api(delete_response)
+    attach_api(delete_response["original_response"])
     assert delete_response["status"] == 200
     assert delete_response["body"] == "Товар удалён"
 
@@ -73,7 +73,7 @@ def test_delete_product(attach_api):
 @allure.severity(allure.severity_level.NORMAL)
 def test_patch_product(attach_api):
     response = create_product(API_URL)
-    attach_api(response)
+    attach_api(response["original_response"])
     assert response["status"] == 200
 
     product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
@@ -89,5 +89,5 @@ def test_patch_product(attach_api):
 
     delete_response = delete_product(API_URL, product_id)
 
-    attach_api(delete_response)
+    attach_api(delete_response["original_response"])
     assert delete_response["status"] == 200
