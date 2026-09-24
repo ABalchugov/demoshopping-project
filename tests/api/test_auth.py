@@ -2,7 +2,7 @@ import os
 import allure
 import requests
 from jsonschema import validate
-from schemas.login_schema import login_schema
+from schemas.login_schema import login_response_schema, login_request_schema
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,6 +21,7 @@ TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 @allure.severity(allure.severity_level.CRITICAL)
 def test_successful_auth(attach_api):
     request_body = {"username": USERNAME, "password": PASSWORD}
+    validate(request_body, schema=login_request_schema)
 
     response = requests.post(f"{API_URL}/login", json=request_body)
 
@@ -32,7 +33,7 @@ def test_successful_auth(attach_api):
     assert response.status_code == 200
 
     body = response.json()
-    validate(body, schema=login_schema)
+    validate(body, schema=login_response_schema)
 
     token = body["token"]
     assert TOKEN_PATH in token

@@ -1,4 +1,6 @@
 import requests
+from jsonschema import validate
+from schemas.products_schema import products_schema
 
 PRODUCT = {
     "name": "iPhone 17",
@@ -12,6 +14,7 @@ PRODUCT = {
 
 
 def create_product(url):
+    validate(PRODUCT, schema=products_schema)
     response = requests.post(f"{url}/add-product", json=PRODUCT)
 
     print("\nStatus code:", response.status_code)

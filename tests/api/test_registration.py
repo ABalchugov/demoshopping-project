@@ -3,6 +3,7 @@ import allure
 import requests
 from jsonschema import validate
 from schemas.base_response_schema import base_response_schema as success_registration_schema
+from schemas.registration_schema import registration_request_schema
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +21,7 @@ PASSWORD = "password1"
 @allure.severity(allure.severity_level.CRITICAL)
 def test_successful_registration(attach_api):
     request_body = {"username": USERNAME, "password": PASSWORD}
+    validate(request_body, schema=registration_request_schema)
 
     response = requests.post(f"{API_URL}/register", json=request_body)
 
