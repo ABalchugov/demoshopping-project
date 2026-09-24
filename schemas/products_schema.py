@@ -42,3 +42,41 @@ products_schema = {
         ]
     }
 }
+
+product_schema = {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "category": {
+      "type": "string"
+    },
+    "manufacturer": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "freeShipping": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "price",
+    "category",
+    "manufacturer",
+    "imageUrl",
+    "freeShipping"
+  ]
+}
