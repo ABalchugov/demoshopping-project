@@ -54,14 +54,13 @@ pip install -r requirements.txt
 
 ## Jenkins
 
-[Ссылка на сборку](https://jenkins.qa.guru/job/026_balchugov_diplom/)
 ![Сборка в Jenkins](./images/Jenkins.jpg)
 
 Автоматизированные тесты запускаются в Jenkins.
 В рамках сборки выполняются UI- и API-тесты, после чего формируется Allure Report.
 
 ## Allure report
-[Пример отчета](https://jenkins.qa.guru/job/026_balchugov_diplom/9/allure/)
+
 ![Allure report](./images/Allure%20Report.jpg)
 
 Allure используется для формирования наглядных отчётов о результатах выполнения автотестов.
@@ -76,7 +75,7 @@ Allure используется для формирования наглядны
 Для UI-тестов дополнительно сохраняются скриншоты, HTML страницы, логи браузера и видео выполнения теста.
 
 ## Allure TestOps
-[Пример запуска](https://allure.qa.guru/launch/56457)
+
 ![Allure TestOps](./images/Allure%20TestOps.jpg)
 
 Результаты автоматизированных тестов передаются в Allure TestOps, где можно отслеживать историю запусков, результаты тестов и их структуру.
