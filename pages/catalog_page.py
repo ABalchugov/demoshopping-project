@@ -26,13 +26,13 @@ class CatalogPage(PageFactory):
         return self.driver.find_element(By.ID, "product-list").get_attribute("innerHTML")
 
     @allure.step("Ожидание результата фильтрации")
-    def wait_for_filter_result(self, old_state, timeout=5):
+    def wait_for_filter_result(self, old_state, timeout=10):
         try:
             WebDriverWait(self.driver, timeout).until(
                 lambda driver: driver.find_element(By.ID, "product-list").get_attribute("innerHTML") != old_state
             )
         except TimeoutException:
-            pass  # список мог не измениться — это нормальный исход
+            pass
 
     @allure.step("Получить первую карточку")
     def get_first_card(self):
