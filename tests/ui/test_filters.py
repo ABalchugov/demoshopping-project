@@ -31,7 +31,7 @@ def test_min_price_filter(driver, price):
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(1)
+    time.sleep(3)
     old_state = catalog.get_catalog_state()
 
     form.fill_min_price_filter(price)
@@ -75,7 +75,7 @@ def test_max_price_filter(
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(1)
+    time.sleep(3)
     old_state = catalog.get_catalog_state()
 
     form.fill_max_price_filter(price)
@@ -117,7 +117,7 @@ def test_category_filter(
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(1)
+    time.sleep(3)
     old_state = catalog.get_catalog_state()
 
     form.choose_categories_filter(category)
@@ -158,7 +158,7 @@ def test_manufacturer_filter(
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(1)
+    time.sleep(3)
     old_state = catalog.get_catalog_state()
 
     form.choose_manufacturer_filter(manufacturer)
@@ -187,7 +187,7 @@ def test_free_shipping_checkbox_filter(driver):
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(1)
+    time.sleep(3)
     old_state = catalog.get_catalog_state()
 
     form.click_free_shipping_checkbox_filter()
@@ -214,7 +214,7 @@ def test_reset_filters_button(driver):
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(1)
+    time.sleep(3)
     old_state = catalog.get_catalog_state()
 
     form.fill_min_price_filter(1)
