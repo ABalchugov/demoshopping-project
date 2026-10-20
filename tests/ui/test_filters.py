@@ -1,5 +1,3 @@
-import time
-
 import pytest
 import allure
 
@@ -31,13 +29,14 @@ def test_min_price_filter(driver, price):
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(3)
-    old_state = catalog.get_catalog_state()
+    catalog.wait_for_catalog_loaded()
 
     form.fill_min_price_filter(price)
     form.click_apply_filters_button()
 
-    catalog.wait_for_filter_result(old_state)
+    catalog.wait_for_filter_result(
+        lambda params: not params or params["price"] >= price
+    )
 
     params = catalog.get_first_card_parameters()
 
@@ -75,13 +74,14 @@ def test_max_price_filter(
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(3)
-    old_state = catalog.get_catalog_state()
+    catalog.wait_for_catalog_loaded()
 
     form.fill_max_price_filter(price)
     form.click_apply_filters_button()
 
-    catalog.wait_for_filter_result(old_state)
+    catalog.wait_for_filter_result(
+        lambda params: not params or params["price"] <= price
+    )
 
     params = catalog.get_first_card_parameters()
 
@@ -117,13 +117,16 @@ def test_category_filter(
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(3)
-    old_state = catalog.get_catalog_state()
+    catalog.wait_for_catalog_loaded()
 
     form.choose_categories_filter(category)
     form.click_apply_filters_button()
 
-    catalog.wait_for_filter_result(old_state)
+    catalog.wait_for_filter_result(
+        lambda params: bool(params) and (
+                not category or params["category"] == category
+        )
+    )
 
     params = catalog.get_first_card_parameters()
 
@@ -158,13 +161,16 @@ def test_manufacturer_filter(
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(3)
-    old_state = catalog.get_catalog_state()
+    catalog.wait_for_catalog_loaded()
 
     form.choose_manufacturer_filter(manufacturer)
     form.click_apply_filters_button()
 
-    catalog.wait_for_filter_result(old_state)
+    catalog.wait_for_filter_result(
+        lambda params: bool(params) and (
+                not manufacturer or params["manufacturer"] == manufacturer
+        )
+    )
 
     params = catalog.get_first_card_parameters()
 
@@ -187,13 +193,14 @@ def test_free_shipping_checkbox_filter(driver):
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(3)
-    old_state = catalog.get_catalog_state()
+    catalog.wait_for_catalog_loaded()
 
     form.click_free_shipping_checkbox_filter()
     form.click_apply_filters_button()
 
-    catalog.wait_for_filter_result(old_state)
+    catalog.wait_for_filter_result(
+        lambda params: bool(params) and params["free_shipping"] == "Да"
+    )
 
     params = catalog.get_first_card_parameters()
 
@@ -214,8 +221,8 @@ def test_reset_filters_button(driver):
     catalog = CatalogPage(driver)
 
     form.open()
-    time.sleep(3)
-    old_state = catalog.get_catalog_state()
+    catalog.wait_for_catalog_loaded()
+    initial_result = catalog.get_first_card_parameters()
 
     form.fill_min_price_filter(1)
     form.fill_max_price_filter(1000)
@@ -225,12 +232,20 @@ def test_reset_filters_button(driver):
 
     form.click_apply_filters_button()
 
-    catalog.wait_for_filter_result(old_state)
-    state = catalog.get_catalog_state()
+    catalog.wait_for_filter_result(
+        lambda params: bool(params)
+                       and params["price"] >= 1
+                       and params["price"] <= 1000
+                       and params["category"] == "Phones"
+                       and params["manufacturer"] == "Apple"
+                       and params["free_shipping"] == "Да"
+    )
 
     form.click_reset_filters_button()
 
-    catalog.wait_for_filter_result(state)
+    catalog.wait_for_filter_result(
+        lambda params: bool(params) and params == initial_result
+    )
 
     new_state = form.get_filters_state()
 

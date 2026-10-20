@@ -1,5 +1,5 @@
 import allure
-from selenium.common import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
@@ -10,7 +10,7 @@ class CatalogPage(PageFactory):
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 5)
+        self.wait = WebDriverWait(driver, 10)
         self.url = os.getenv("TEST_UI_URL")
         self.locators = {
             "product_list_locator": ('ID', "product-list"),
@@ -21,18 +21,23 @@ class CatalogPage(PageFactory):
     def open(self):
         self.driver.get(self.url)
 
-    @allure.step("Получить состояние каталога")
-    def get_catalog_state(self):
-        return self.driver.find_element(By.ID, "product-list").get_attribute("innerHTML")
+    @allure.step("Дождаться первичной загрузки каталога")
+    def wait_for_catalog_loaded(self, timeout=10):
+        def catalog_has_results(driver):
+            product_list = driver.find_element(By.ID, "product-list")
+            return product_list if product_list.find_elements(By.XPATH, "./div") else False
 
-    @allure.step("Ожидание результата фильтрации")
-    def wait_for_filter_result(self, old_state, timeout=10):
-        try:
-            WebDriverWait(self.driver, timeout).until(
-                lambda driver: driver.find_element(By.ID, "product-list").get_attribute("innerHTML") != old_state
-            )
-        except TimeoutException:
-            pass
+        return WebDriverWait(self.driver, timeout).until(catalog_has_results)
+
+    @allure.step("Дождаться карточек, соответствующих фильтру")
+    def wait_for_filter_result(self, condition, timeout=10):
+        def result_matches(driver):
+            try:
+                return condition(self.get_first_card_parameters())
+            except StaleElementReferenceException:
+                return False
+
+        return WebDriverWait(self.driver, timeout).until(result_matches)
 
     @allure.step("Получить первую карточку")
     def get_first_card(self):
