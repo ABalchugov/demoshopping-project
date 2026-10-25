@@ -63,22 +63,30 @@ def driver(request):
     if headless:
         options.add_argument("--headless")
 
-    selenoid_capabilities = {
-        "browserName": browser,
-        "browserVersion": browser_version,
-        "selenoid:options": {
-            "enableVNC": True,
-            "enableVideo": True
+    selenoid_url = os.getenv("SELENOID_URL", "").strip()
+
+    if selenoid_url:
+        selenoid_capabilities = {
+            "browserName": browser,
+            "browserVersion": browser_version,
+            "selenoid:options": {
+                "enableVNC": True,
+                "enableVideo": True
+            }
         }
-    }
-    options.capabilities.update(selenoid_capabilities)
-    selenoid_login = os.getenv("SELENOID_LOGIN")
-    selenoid_pass = os.getenv("SELENOID_PASS")
-    selenoid_url = os.getenv("SELENOID_URL")
-    driver = webdriver.Remote(
-        command_executor=f"https://{selenoid_login}:{selenoid_pass}@{selenoid_url}/wd/hub",
-        options=options
-    )
+        options.capabilities.update(selenoid_capabilities)
+        selenoid_login = os.getenv("SELENOID_LOGIN")
+        selenoid_pass = os.getenv("SELENOID_PASS")
+        driver = webdriver.Remote(
+            command_executor=(
+                f"https://{selenoid_login}:{selenoid_pass}@{selenoid_url}/wd/hub"
+            ),
+            options=options
+        )
+    elif browser == "chrome":
+        driver = webdriver.Chrome(options=options)
+    else:
+        driver = webdriver.Firefox(options=options)
 
     yield driver
 
@@ -86,7 +94,8 @@ def driver(request):
         attach.add_html(driver)
         attach.add_screenshot(driver)
         attach.add_logs(driver)
-        attach.add_video(driver)
+        if selenoid_url:
+            attach.add_video(driver)
     finally:
         driver.quit()
 
