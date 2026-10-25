@@ -22,12 +22,6 @@ def pytest_addoption(parser):
         help="Browser to use"
     )
     parser.addoption(
-        "--browser_version",
-        default="148.0",
-        choices=("148.0", "153.0", "154.0", "155.0", "156.0"),
-        help="Browser version to use"
-    )
-    parser.addoption(
         "--headless",
         choices=["true", "false"],
         default="false",
@@ -42,7 +36,6 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="function")
 def driver(request):
     browser = request.config.getoption("--browser")
-    browser_version = request.config.getoption("--browser_version")
     headless = request.config.getoption("--headless").lower() == "true"
     window_size = request.config.getoption("--window_size")
     width_str, height_str = window_size.split("*", 1)
@@ -68,7 +61,6 @@ def driver(request):
     if selenoid_url:
         selenoid_capabilities = {
             "browserName": browser,
-            "browserVersion": browser_version,
             "selenoid:options": {
                 "enableVNC": True,
                 "enableVideo": True
