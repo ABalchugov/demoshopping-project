@@ -1,6 +1,4 @@
-# Автоматизация тестирования Demoshopping
-
-> [Ссылка на сайт](https://qa.demoshopping.ru/)
+# Автоматизация тестирования [Demoshopping](https://qa.demoshopping.ru/)
 
 ![Скриншот сайта](./images/Demoshopping.jpg)
 
@@ -10,15 +8,15 @@
 
 ## Используемые технологии
 
-* Python
-* Pytest
-* Selenium
-* Selenium Page Factory
-* Requests
-* JSON Schema
-* Allure
-* Selenoid
-* python-dotenv
+* **Python** — язык, на котором написаны тесты и вспомогательный код.
+* **Pytest** — запускает тесты, предоставляет фикстуры для подготовки окружения и позволяет группировать проверки.
+* **Selenium WebDriver** — управляет браузером и выполняет UI-сценарии на сайте.
+* **Selenium Page Factory** — помогает организовать страницы сайта как Page Object-классы и описывать их элементы.
+* **Requests** — отправляет HTTP-запросы для API-тестов.
+* **JSON Schema** — проверяет структуру и типы данных в ответах API.
+* **Allure** — собирает шаги и вложения тестов и формирует отчёт о запуске.
+* **Selenoid** — запускает браузеры удалённо в контейнерах; проект также получает оттуда видео выполнения UI-тестов.
+* **python-dotenv** — загружает настройки и адреса сервисов из файла `.env`.
 
 ## Что проверяем
 
@@ -53,7 +51,7 @@ pip install -r requirements.txt
 
 Для работы с удалённым браузером Selenoid необходимо создать файл `.env` в корне проекта.
 
-## Jenkins
+## [Jenkins](https://jenkins.qa.guru/job/026_balchugov_diplom/)
 
 ![Сборка в Jenkins](./images/Jenkins.jpg)
 
@@ -75,7 +73,7 @@ Allure используется для формирования наглядны
 
 Для UI-тестов дополнительно сохраняются скриншоты, HTML страницы, логи браузера и видео выполнения теста.
 
-## Allure TestOps
+## [Allure TestOps](https://allure.qa.guru/project/5378/launches)
 
 ![Allure TestOps](./images/Allure%20TestOps.jpg)
 
