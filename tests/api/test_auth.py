@@ -1,9 +1,11 @@
 import os
+
 import allure
 import requests
-from jsonschema import validate
-from schemas.login_schema import login_response_schema, login_request_schema
 from dotenv import load_dotenv
+from jsonschema import validate
+
+from schemas.login_schema import login_response_schema, login_request_schema
 
 load_dotenv()
 

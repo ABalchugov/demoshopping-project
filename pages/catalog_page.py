@@ -1,9 +1,10 @@
+import os
+
 import allure
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
-import os
 
 
 class CatalogPage(PageFactory):

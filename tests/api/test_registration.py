@@ -1,10 +1,12 @@
 import os
+
 import allure
 import requests
+from dotenv import load_dotenv
 from jsonschema import validate
+
 from schemas.base_response_schema import base_response_schema as success_registration_schema
 from schemas.registration_schema import registration_request_schema
-from dotenv import load_dotenv
 
 load_dotenv()
 

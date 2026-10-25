@@ -1,10 +1,12 @@
+import os
+
 import pytest
+from dotenv import load_dotenv
 from selenium import webdriver
-from utils import attach
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from dotenv import load_dotenv
-import os
+
+from utils import attach
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -87,6 +89,7 @@ def driver(request):
         attach.add_video(driver)
     finally:
         driver.quit()
+
 
 @pytest.fixture
 def attach_api():

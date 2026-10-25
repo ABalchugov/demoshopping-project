@@ -1,8 +1,9 @@
+import os
+
 import allure
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
-from selenium.webdriver.support.ui import Select
-import os
 
 
 class FilterPage(PageFactory):

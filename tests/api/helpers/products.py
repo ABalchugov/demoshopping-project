@@ -1,5 +1,6 @@
 import requests
 from jsonschema import validate
+
 from schemas.products_schema import product_schema
 
 PRODUCT = {

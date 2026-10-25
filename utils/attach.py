@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 import allure
 from allure_commons.types import AttachmentType
 

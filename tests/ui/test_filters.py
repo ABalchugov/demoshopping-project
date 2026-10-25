@@ -1,8 +1,8 @@
-import pytest
 import allure
+import pytest
 
-from pages.filter_page import FilterPage
 from pages.catalog_page import CatalogPage
+from pages.filter_page import FilterPage
 
 
 @allure.label("layer", "UI Tests")

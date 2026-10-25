@@ -1,7 +1,7 @@
 import random
 
-import pytest
 import allure
+import pytest
 
 from pages.registration_page import RegistrationPage
 

@@ -1,9 +1,10 @@
+import os
+
 import allure
 from selenium.common import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory, ElementNotFoundException
-from selenium.webdriver.support import expected_conditions as EC
-import os
 
 
 class LoginPage(PageFactory):

@@ -1,11 +1,12 @@
 import os
+
 import allure
 import requests
+from dotenv import load_dotenv
 from jsonschema import validate
 
 from helpers.products import create_product, delete_product
 from schemas.products_schema import products_schema
-from dotenv import load_dotenv
 
 load_dotenv()
 
