@@ -1,10 +1,9 @@
-import os
-
 import allure
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
+from utils.config import TEST_UI_URL
 
 
 class CatalogPage(PageFactory):
@@ -12,7 +11,7 @@ class CatalogPage(PageFactory):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
-        self.url = os.getenv("TEST_UI_URL")
+        self.url = TEST_UI_URL
         self.locators = {
             "product_list_locator": ('ID', "product-list"),
             "first_card_in_product_list_locator": ('xpath', '//*[@id="product-list"]/div[1]')

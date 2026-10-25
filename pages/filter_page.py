@@ -1,9 +1,8 @@
-import os
-
 import allure
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
+from utils.config import TEST_UI_URL
 
 
 class FilterPage(PageFactory):
@@ -11,7 +10,7 @@ class FilterPage(PageFactory):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 5)
-        self.url = os.getenv("TEST_UI_URL")
+        self.url = TEST_UI_URL
         self.locators = {
             "min_price_locator": ('ID', "min-price"),
             "max_price_locator": ('ID', "max-price"),

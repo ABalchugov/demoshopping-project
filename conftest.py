@@ -1,17 +1,10 @@
-import os
-
 import pytest
-from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 from utils import attach
-
-
-@pytest.fixture(scope="session", autouse=True)
-def load_env():
-    load_dotenv()
+from utils.config import SELENOID_LOGIN, SELENOID_PASS, SELENOID_URL
 
 
 def pytest_addoption(parser):
@@ -56,7 +49,7 @@ def driver(request):
     if headless:
         options.add_argument("--headless")
 
-    selenoid_url = os.getenv("SELENOID_URL", "").strip()
+    selenoid_url = SELENOID_URL
 
     if selenoid_url:
         selenoid_capabilities = {
@@ -67,11 +60,9 @@ def driver(request):
             }
         }
         options.capabilities.update(selenoid_capabilities)
-        selenoid_login = os.getenv("SELENOID_LOGIN")
-        selenoid_pass = os.getenv("SELENOID_PASS")
         driver = webdriver.Remote(
             command_executor=(
-                f"https://{selenoid_login}:{selenoid_pass}@{selenoid_url}/wd/hub"
+                f"https://{SELENOID_LOGIN}:{SELENOID_PASS}@{selenoid_url}/wd/hub"
             ),
             options=options
         )

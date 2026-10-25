@@ -1,9 +1,8 @@
-import os
-
 import allure
 from selenium.common import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory, ElementNotFoundException
+from utils.config import TEST_UI_URL
 
 
 class RegistrationPage(PageFactory):
@@ -11,7 +10,7 @@ class RegistrationPage(PageFactory):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 5)
-        self.url = f'{os.getenv("TEST_UI_URL")}/login'
+        self.url = f"{TEST_UI_URL}/login"
         self.locators = {
             "login_locator": ('ID', "register-username"),
             "password_locator": ('ID', "register-password"),
