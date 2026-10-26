@@ -1,6 +1,7 @@
 import allure
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
 from utils.config import TEST_UI_URL
@@ -23,22 +24,22 @@ class CatalogPage(PageFactory):
 
     @allure.step("Дождаться первичной загрузки каталога")
     def wait_for_catalog_loaded(self, timeout=10):
-        def catalog_has_results(driver):
-            product_list = driver.find_element(By.ID, "product-list")
-            return bool(product_list.find_elements(By.XPATH, "./div"))
-
-        return WebDriverWait(self.driver, timeout).until(catalog_has_results)
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "#product-list > div")
+            )
+        )
 
     @allure.step("Дождаться карточек, соответствующих фильтру")
-    def wait_for_filter_result(self, condition, timeout=10):
-        def result_matches(driver):
+    def wait_for_filter_result(self, condition, timeout=10) -> None:
+        def result_matches(_driver):
             try:
                 card = self.get_first_card()
-                return condition(self.get_card_parameters(card))
+                return bool(condition(self.get_card_parameters(card)))
             except StaleElementReferenceException:
                 return False
 
-        return WebDriverWait(self.driver, timeout).until(result_matches)
+        WebDriverWait(self.driver, timeout).until(result_matches)
 
     @allure.step("Получить первую карточку")
     def get_first_card(self):
