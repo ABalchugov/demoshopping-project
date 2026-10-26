@@ -255,8 +255,8 @@ def test_reset_filters_button(driver):
 
     new_state = form.get_filters_state()
 
-    assert new_state["min_price"] == "", "Поле Мин цена не очистилось"
-    assert new_state["max_price"] == "", "Поле Макс цена не очистилось"
-    assert new_state["category"] == "", "Поле Категория не очистилось"
-    assert new_state["manufacturer"] == "", "Поле Производитель не очистилось"
-    assert new_state["free_shipping"] == False, "Чекбокс Бесплатная доставка не сбросился"
+    assert new_state.min_price == "", "Поле Мин цена не очистилось"
+    assert new_state.max_price == "", "Поле Макс цена не очистилось"
+    assert new_state.category == "", "Поле Категория не очистилось"
+    assert new_state.manufacturer == "", "Поле Производитель не очистилось"
+    assert not new_state.free_shipping, "Чекбокс Бесплатная доставка не сбросился"

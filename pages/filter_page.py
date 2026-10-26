@@ -1,8 +1,19 @@
+from dataclasses import dataclass
+
 import allure
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
 from utils.config import TEST_UI_URL
+
+
+@dataclass
+class FiltersState:
+    min_price: str | None
+    max_price: str | None
+    category: str | None
+    manufacturer: str | None
+    free_shipping: bool
 
 
 class FilterPage(PageFactory):
@@ -56,11 +67,11 @@ class FilterPage(PageFactory):
         self.reset_filters_button_locator.click()
 
     @allure.step("Получить текущее состояние фильтров")
-    def get_filters_state(self):
-        state = {"min_price": self.min_price_locator.get_attribute("value"),
-                 "max_price": self.max_price_locator.get_attribute("value"),
-                 "category": self.categories_locator.get_attribute("value"),
-                 "manufacturer": self.manufacturer_locator.get_attribute("value"),
-                 "free_shipping": self.free_shipping_checkbox_locator.is_selected()}
-
-        return state
+    def get_filters_state(self) -> FiltersState:
+        return FiltersState(
+            min_price=self.min_price_locator.get_attribute("value"),
+            max_price=self.max_price_locator.get_attribute("value"),
+            category=self.categories_locator.get_attribute("value"),
+            manufacturer=self.manufacturer_locator.get_attribute("value"),
+            free_shipping=self.free_shipping_checkbox_locator.is_selected(),
+        )
