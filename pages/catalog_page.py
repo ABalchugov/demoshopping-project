@@ -33,7 +33,8 @@ class CatalogPage(PageFactory):
     def wait_for_filter_result(self, condition, timeout=10):
         def result_matches(driver):
             try:
-                return condition(self.get_first_card_parameters())
+                card = self.get_first_card()
+                return condition(self.get_card_parameters(card))
             except StaleElementReferenceException:
                 return False
 
@@ -51,10 +52,8 @@ class CatalogPage(PageFactory):
 
         return cards[0]
 
-    @allure.step("Получить параметры первой карточки")
-    def get_first_card_parameters(self):
-        card = self.get_first_card()
-
+    @allure.step("Получить параметры карточки")
+    def get_card_parameters(self, card):
         if card is None:
             return {}
 

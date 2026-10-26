@@ -38,7 +38,8 @@ def test_min_price_filter(driver, price):
         lambda params: not params or params["price"] >= price
     )
 
-    params = catalog.get_first_card_parameters()
+    first_card = catalog.get_first_card()
+    params = catalog.get_card_parameters(first_card)
 
     if params:
         assert params["price"] >= price, (
@@ -83,7 +84,8 @@ def test_max_price_filter(
         lambda params: not params or params["price"] <= price
     )
 
-    params = catalog.get_first_card_parameters()
+    first_card = catalog.get_first_card()
+    params = catalog.get_card_parameters(first_card)
 
     if params:
         assert params["price"] <= price, (
@@ -128,7 +130,8 @@ def test_category_filter(
         )
     )
 
-    params = catalog.get_first_card_parameters()
+    first_card = catalog.get_first_card()
+    params = catalog.get_card_parameters(first_card)
 
     assert params, "Список карточек пуст после применения фильтра"
 
@@ -172,7 +175,8 @@ def test_manufacturer_filter(
         )
     )
 
-    params = catalog.get_first_card_parameters()
+    first_card = catalog.get_first_card()
+    params = catalog.get_card_parameters(first_card)
 
     assert params, "Список карточек пуст после применения фильтра"
 
@@ -202,7 +206,8 @@ def test_free_shipping_checkbox_filter(driver):
         lambda params: bool(params) and params["free_shipping"] == "Да"
     )
 
-    params = catalog.get_first_card_parameters()
+    first_card = catalog.get_first_card()
+    params = catalog.get_card_parameters(first_card)
 
     assert params, "Список карточек пуст после применения фильтра"
     assert params["free_shipping"] == "Да", "Карточка не соответствует фильтру бесплатная доставка"
@@ -222,7 +227,8 @@ def test_reset_filters_button(driver):
 
     form.open()
     catalog.wait_for_catalog_loaded()
-    initial_result = catalog.get_first_card_parameters()
+    first_card = catalog.get_first_card()
+    initial_result = catalog.get_card_parameters(first_card)
 
     form.fill_min_price_filter(1)
     form.fill_max_price_filter(1000)
