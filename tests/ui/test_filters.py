@@ -32,11 +32,9 @@ def test_min_price_filter(driver, price):
     catalog.wait_for_catalog_loaded()
 
     form.fill_min_price_filter(price)
+    previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
-
-    catalog.wait_for_filter_result(
-        lambda params: not params or params["price"] >= price
-    )
+    catalog.wait_for_catalog_updated(previous_cards)
 
     first_card = catalog.get_first_card()
     params = catalog.get_card_parameters(first_card)
@@ -78,11 +76,9 @@ def test_max_price_filter(
     catalog.wait_for_catalog_loaded()
 
     form.fill_max_price_filter(price)
+    previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
-
-    catalog.wait_for_filter_result(
-        lambda params: not params or params["price"] <= price
-    )
+    catalog.wait_for_catalog_updated(previous_cards)
 
     first_card = catalog.get_first_card()
     params = catalog.get_card_parameters(first_card)
@@ -122,13 +118,9 @@ def test_category_filter(
     catalog.wait_for_catalog_loaded()
 
     form.choose_categories_filter(category)
+    previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
-
-    catalog.wait_for_filter_result(
-        lambda params: bool(params) and (
-                not category or params["category"] == category
-        )
-    )
+    catalog.wait_for_catalog_updated(previous_cards)
 
     first_card = catalog.get_first_card()
     params = catalog.get_card_parameters(first_card)
@@ -167,13 +159,9 @@ def test_manufacturer_filter(
     catalog.wait_for_catalog_loaded()
 
     form.choose_manufacturer_filter(manufacturer)
+    previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
-
-    catalog.wait_for_filter_result(
-        lambda params: bool(params) and (
-                not manufacturer or params["manufacturer"] == manufacturer
-        )
-    )
+    catalog.wait_for_catalog_updated(previous_cards)
 
     first_card = catalog.get_first_card()
     params = catalog.get_card_parameters(first_card)
@@ -200,11 +188,9 @@ def test_free_shipping_checkbox_filter(driver):
     catalog.wait_for_catalog_loaded()
 
     form.click_free_shipping_checkbox_filter()
+    previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
-
-    catalog.wait_for_filter_result(
-        lambda params: bool(params) and params["free_shipping"] == "Да"
-    )
+    catalog.wait_for_catalog_updated(previous_cards)
 
     first_card = catalog.get_first_card()
     params = catalog.get_card_parameters(first_card)
@@ -221,37 +207,34 @@ def test_free_shipping_checkbox_filter(driver):
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.smoke
 @pytest.mark.regress
-def test_reset_filters_button(driver):
+@pytest.mark.parametrize("max_price", [1000, -1])
+def test_reset_filters_button(driver, max_price):
     form = FilterPage(driver)
     catalog = CatalogPage(driver)
 
     form.open()
     catalog.wait_for_catalog_loaded()
-    first_card = catalog.get_first_card()
-    initial_result = catalog.get_card_parameters(first_card)
+    initial_catalog = [card.text for card in catalog.get_cards()]
 
     form.fill_min_price_filter(1)
-    form.fill_max_price_filter(1000)
+    form.fill_max_price_filter(max_price)
     form.choose_categories_filter("Phones")
     form.choose_manufacturer_filter("Apple")
     form.click_free_shipping_checkbox_filter()
 
+    cards_before_apply = catalog.get_cards()
     form.click_apply_filters_button()
+    catalog.wait_for_catalog_updated(cards_before_apply)
 
-    catalog.wait_for_filter_result(
-        lambda params: bool(params)
-                       and params["price"] >= 1
-                       and params["price"] <= 1000
-                       and params["category"] == "Phones"
-                       and params["manufacturer"] == "Apple"
-                       and params["free_shipping"] == "Да"
-    )
-
+    cards_before_reset = catalog.get_cards()
     form.click_reset_filters_button()
+    if cards_before_reset:
+        catalog.wait_for_catalog_updated(cards_before_reset)
+    else:
+        catalog.wait_for_catalog_loaded()
 
-    catalog.wait_for_filter_result(
-        lambda params: bool(params) and params == initial_result
-    )
+    restored_catalog = [card.text for card in catalog.get_cards()]
+    assert restored_catalog == initial_catalog, "Каталог не восстановился после сброса фильтров"
 
     new_state = form.get_filters_state()
 
