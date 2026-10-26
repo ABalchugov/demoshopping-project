@@ -25,7 +25,7 @@ class CatalogPage(PageFactory):
     def wait_for_catalog_loaded(self, timeout=10):
         def catalog_has_results(driver):
             product_list = driver.find_element(By.ID, "product-list")
-            return product_list if product_list.find_elements(By.XPATH, "./div") else False
+            return bool(product_list.find_elements(By.XPATH, "./div"))
 
         return WebDriverWait(self.driver, timeout).until(catalog_has_results)
 
