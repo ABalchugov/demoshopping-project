@@ -1,12 +1,10 @@
 import requests
 from jsonschema import validate
 
-from data.products import ProductData
 from schemas.products_schema import product_schema
 
 
-def create_product(url):
-    product = ProductData.PRODUCT
+def create_product(url, product):
     validate(product, schema=product_schema)
     response = requests.post(f"{url}/add-product", json=product)
 

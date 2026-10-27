@@ -2,6 +2,7 @@ import allure
 import requests
 from jsonschema import validate
 
+from data.products import ProductData
 from schemas.products_schema import products_schema
 from utils.attach import attach_api_response
 from utils.config import TEST_API_URL
@@ -32,7 +33,7 @@ def test_get_products():
 @allure.title("Добавление нового продукта")
 @allure.severity(allure.severity_level.NORMAL)
 def test_add_product():
-    response = create_product(TEST_API_URL)
+    response = create_product(TEST_API_URL, ProductData.PRODUCT)
     attach_api_response(response["original_response"])
     assert response["status"] == 200
     assert response["body"].startswith("Продукт успешно добавлен с ID:")
@@ -49,7 +50,7 @@ def test_add_product():
 @allure.title("Удаление продукта по ID")
 @allure.severity(allure.severity_level.NORMAL)
 def test_delete_product():
-    response = create_product(TEST_API_URL)
+    response = create_product(TEST_API_URL, ProductData.PRODUCT)
     attach_api_response(response["original_response"])
     assert response["status"] == 200
 
@@ -68,7 +69,7 @@ def test_delete_product():
 @allure.title("Частичное обновление товара по ID")
 @allure.severity(allure.severity_level.NORMAL)
 def test_patch_product():
-    response = create_product(TEST_API_URL)
+    response = create_product(TEST_API_URL, ProductData.PRODUCT)
     attach_api_response(response["original_response"])
     assert response["status"] == 200
 
