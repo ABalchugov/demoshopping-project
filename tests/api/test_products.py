@@ -2,10 +2,10 @@ import allure
 import requests
 from jsonschema import validate
 
-from helpers.products import create_product, delete_product
 from schemas.products_schema import products_schema
 from utils.attach import attach_api_response
 from utils.config import TEST_API_URL
+from utils.products import create_product, delete_product
 
 
 @allure.label("layer", "API Tests")
