@@ -31,20 +31,20 @@ def test_min_price_filter(driver, price):
     form.open()
     catalog.wait_for_catalog_loaded()
 
+    initial_products = catalog.get_all_card_parameters()
+    expected_count = sum(product["price"] >= price for product in initial_products)
+
     form.fill_min_price_filter(price)
     previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
     catalog.wait_for_catalog_updated(previous_cards)
 
-    first_card = catalog.get_first_card()
-    params = catalog.get_card_parameters(first_card)
+    products = catalog.get_all_card_parameters()
 
-    if params:
-        assert params["price"] >= price, (
-            f"Цена {params['price']} меньше минимальной цены {price}"
-        )
-    else:
-        allure.attach("Список пуст — нет товаров с ценой ниже заданной", name="Инфо")
+    assert len(products) == expected_count, "Количество товаров не соответствует фильтру минимальной цены"
+    assert all(product["price"] >= price for product in products), (
+        f"Найдены товары с ценой ниже {price}: {products}"
+    )
 
 
 @allure.label("layer", "UI Tests")
@@ -75,20 +75,20 @@ def test_max_price_filter(
     form.open()
     catalog.wait_for_catalog_loaded()
 
+    initial_products = catalog.get_all_card_parameters()
+    expected_count = sum(product["price"] <= price for product in initial_products)
+
     form.fill_max_price_filter(price)
     previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
     catalog.wait_for_catalog_updated(previous_cards)
 
-    first_card = catalog.get_first_card()
-    params = catalog.get_card_parameters(first_card)
+    products = catalog.get_all_card_parameters()
 
-    if params:
-        assert params["price"] <= price, (
-            f"Цена {params['price']} больше максимальной цены {price}"
-        )
-    else:
-        allure.attach("Список пуст — нет товаров с ценой выше заданной", name="Инфо")
+    assert len(products) == expected_count, "Количество товаров не соответствует фильтру максимальной цены"
+    assert all(product["price"] <= price for product in products), (
+        f"Найдены товары с ценой выше {price}: {products}"
+    )
 
 
 @allure.label("layer", "UI Tests")
@@ -117,18 +117,25 @@ def test_category_filter(
     form.open()
     catalog.wait_for_catalog_loaded()
 
+    initial_products = catalog.get_all_card_parameters()
+    expected_count = sum(
+        not category or product["category"] == category for product in initial_products
+    )
+
     form.choose_categories_filter(category)
     previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
     catalog.wait_for_catalog_updated(previous_cards)
 
-    first_card = catalog.get_first_card()
-    params = catalog.get_card_parameters(first_card)
+    products = catalog.get_all_card_parameters()
 
-    assert params, "Список карточек пуст после применения фильтра"
-
+    assert len(products) == expected_count, "Количество товаров не соответствует фильтру категории"
     if category:
-        assert params["category"] == category, "Категория в карточке не соответствует фильтру"
+        assert all(product["category"] == category for product in products), (
+            f"Найдены товары другой категории: {products}"
+        )
+    else:
+        assert products == initial_products, "Без выбора категории состав каталога изменился"
 
 
 @allure.label("layer", "UI Tests")
@@ -158,18 +165,26 @@ def test_manufacturer_filter(
     form.open()
     catalog.wait_for_catalog_loaded()
 
+    initial_products = catalog.get_all_card_parameters()
+    expected_count = sum(
+        not manufacturer or product["manufacturer"] == manufacturer
+        for product in initial_products
+    )
+
     form.choose_manufacturer_filter(manufacturer)
     previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
     catalog.wait_for_catalog_updated(previous_cards)
 
-    first_card = catalog.get_first_card()
-    params = catalog.get_card_parameters(first_card)
+    products = catalog.get_all_card_parameters()
 
-    assert params, "Список карточек пуст после применения фильтра"
-
+    assert len(products) == expected_count, "Количество товаров не соответствует фильтру производителя"
     if manufacturer:
-        assert params["manufacturer"] == manufacturer, "Производитель в карточке не соответствует фильтру"
+        assert all(product["manufacturer"] == manufacturer for product in products), (
+            f"Найдены товары другого производителя: {products}"
+        )
+    else:
+        assert products == initial_products, "Без выбора производителя состав каталога изменился"
 
 
 @allure.label("layer", "UI Tests")
@@ -187,16 +202,20 @@ def test_free_shipping_checkbox_filter(driver):
     form.open()
     catalog.wait_for_catalog_loaded()
 
+    initial_products = catalog.get_all_card_parameters()
+    expected_count = sum(product["free_shipping"] == "Да" for product in initial_products)
+
     form.click_free_shipping_checkbox_filter()
     previous_cards = catalog.get_cards()
     form.click_apply_filters_button()
     catalog.wait_for_catalog_updated(previous_cards)
 
-    first_card = catalog.get_first_card()
-    params = catalog.get_card_parameters(first_card)
+    products = catalog.get_all_card_parameters()
 
-    assert params, "Список карточек пуст после применения фильтра"
-    assert params["free_shipping"] == "Да", "Карточка не соответствует фильтру бесплатная доставка"
+    assert len(products) == expected_count, "Количество товаров с бесплатной доставкой не соответствует ожидаемому"
+    assert all(product["free_shipping"] == "Да" for product in products), (
+        f"Найдены товары без бесплатной доставки: {products}"
+    )
 
 
 @allure.label("layer", "UI Tests")
