@@ -1,9 +1,19 @@
-import random
+from uuid import uuid4
 
 import allure
 import pytest
 
 from pages.registration_page import RegistrationPage
+
+
+INVALID_LOGIN_MESSAGE = (
+    "Логин должен содержать от 3 до 15 символов и может включать буквы, цифры и символы: _"
+)
+INVALID_PASSWORD_MESSAGE = (
+    "Пароль должен содержать не менее 8 символов, включая минимум одну букву и одну цифру"
+)
+INVALID_LOGIN_AND_PASSWORD_MESSAGE = f"{INVALID_LOGIN_MESSAGE} {INVALID_PASSWORD_MESSAGE}"
+REGISTRATION_SUCCESS_MESSAGE = "Регистрация выполнена успешно"
 
 
 @allure.label("layer", "UI Tests")
@@ -17,7 +27,7 @@ from pages.registration_page import RegistrationPage
 @pytest.mark.parametrize(
     "login, password",
     [
-        (f"User{random.randint(1, 1000)}", "somepass1"),
+        (f"User{uuid4().hex[:11]}", "somepass1"),
     ],
 )
 def test_positive_registration(
@@ -32,10 +42,10 @@ def test_positive_registration(
     form.fill_password_field(password)
     form.click_registration_button()
 
-    msg_is_displayed = form.success_registration_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Регистрация не успешна"
+    with allure.step("Проверить текст уведомления об успешной регистрации"):
+        assert notification_text == REGISTRATION_SUCCESS_MESSAGE, "Неверное сообщение об успешной регистрации"
 
 
 @allure.label("layer", "UI Tests")
@@ -64,10 +74,10 @@ def test_wrong_login_field_registration(
     form.fill_password_field(password)
     form.click_registration_button()
 
-    msg_is_displayed = form.wrong_login_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Регистрация прошла с некорректным логином"
+    with allure.step("Проверить текст уведомления об ошибке логина"):
+        assert notification_text == INVALID_LOGIN_MESSAGE, "Неверное сообщение об ошибке логина"
 
 
 @allure.label("layer", "UI Tests")
@@ -81,9 +91,9 @@ def test_wrong_login_field_registration(
 @pytest.mark.parametrize(
     "login, password",
     [
-        (f"User{random.randint(1, 1000)}", "pass1"),
-        (f"User{random.randint(1, 1000)}", "somepass"),
-        (f"User{random.randint(1, 1000)}", "123456789")
+        (f"User{uuid4().hex[:11]}", "pass1"),
+        (f"User{uuid4().hex[:11]}", "somepass"),
+        (f"User{uuid4().hex[:11]}", "123456789")
     ],
 )
 def test_wrong_password_field_registration(
@@ -98,10 +108,10 @@ def test_wrong_password_field_registration(
     form.fill_password_field(password)
     form.click_registration_button()
 
-    msg_is_displayed = form.wrong_password_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Регистрация прошла с некорректным паролем"
+    with allure.step("Проверить текст уведомления об ошибке пароля"):
+        assert notification_text == INVALID_PASSWORD_MESSAGE, "Неверное сообщение об ошибке пароля"
 
 
 @allure.label("layer", "UI Tests")
@@ -132,7 +142,7 @@ def test_wrong_login_and_password_fields_registration(
     form.fill_password_field(password)
     form.click_registration_button()
 
-    msg_is_displayed = form.wrong_login_and_password_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Регистрация прошла с некорректными данными"
+    with allure.step("Проверить текст уведомления об ошибках логина и пароля"):
+        assert notification_text == INVALID_LOGIN_AND_PASSWORD_MESSAGE, "Неверное сообщение об ошибках логина и пароля"

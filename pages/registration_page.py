@@ -1,27 +1,19 @@
 import allure
-from selenium.common import TimeoutException
-from selenium.webdriver.support.wait import WebDriverWait
-from seleniumpagefactory.Pagefactory import PageFactory, ElementNotFoundException
+
+from pages.base_page import BasePage
 from utils.config import TEST_UI_URL
 
 
-class RegistrationPage(PageFactory):
+class RegistrationPage(BasePage):
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 5)
         self.url = f"{TEST_UI_URL}/login"
         self.locators = {
             "login_locator": ('ID', "register-username"),
             "password_locator": ('ID', "register-password"),
             "registration_button_locator": ('xpath', '//*[@id="register-form"]/button'),
-            "wrong_login_msg_locator": ('xpath',
-                                        "//div[text()='Логин должен содержать от 3 до 15 символов и может включать буквы, цифры и символы: _']"),
-            "wrong_password_msg_locator": ('xpath',
-                                           "//div[text()='Пароль должен содержать не менее 8 символов, включая минимум одну букву и одну цифру']"),
-            "wrong_login_and_password_msg_locator": ('xpath',
-                                                     "//div[contains(., 'Логин должен содержать от 3 до 15 символов') and contains(., 'Пароль должен содержать не менее 8 символов')]"),
-            "success_registration_msg_locator": ('xpath', "//div[text()='Регистрация выполнена успешно']")
+            "notification_locator": ('css', 'div[style*="animation"]'),
         }
 
     @allure.step("Открыть форму")
@@ -39,39 +31,3 @@ class RegistrationPage(PageFactory):
     @allure.step("Нажать кнопку Зарегистрироваться")
     def click_registration_button(self):
         self.registration_button_locator.click()
-
-    @allure.step("Проверить сообщение об ошибке в поле Логин")
-    def wrong_login_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.wrong_login_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
-
-    @allure.step("Проверить сообщение об ошибке в поле Пароль")
-    def wrong_password_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.wrong_password_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
-
-    @allure.step("Проверить сообщение об ошибке в полях Логин и Пароль")
-    def wrong_login_and_password_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.wrong_login_and_password_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
-
-    @allure.step("Проверить сообщение об успешной регистрации")
-    def success_registration_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.success_registration_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
