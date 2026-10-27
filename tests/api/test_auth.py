@@ -3,6 +3,7 @@ import requests
 from jsonschema import validate
 
 from schemas.login_schema import login_response_schema, login_request_schema
+from utils.attach import attach_api_response
 from utils.config import TEST_API_URL
 
 
@@ -17,13 +18,13 @@ TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 @allure.story("Успешная авторизация")
 @allure.title("Отправка формы с корректными логином и паролем")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_successful_auth(attach_api):
+def test_successful_auth():
     request_body = {"username": USERNAME, "password": PASSWORD}
     validate(request_body, schema=login_request_schema)
 
     response = requests.post(f"{TEST_API_URL}/login", json=request_body)
 
-    attach_api(response)
+    attach_api_response(response)
     print("\nStatus code:", response.status_code)
     print("Headers:", response.headers)
     print("Body:", response.text)
