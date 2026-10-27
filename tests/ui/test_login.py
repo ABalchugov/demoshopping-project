@@ -4,6 +4,16 @@ import pytest
 from pages.login_page import LoginPage
 
 
+INVALID_LOGIN_MESSAGE = (
+    "Логин должен содержать от 3 до 15 символов и может включать буквы, цифры и символы: _"
+)
+INVALID_PASSWORD_MESSAGE = (
+    "Пароль должен содержать не менее 8 символов, включая минимум одну букву и одну цифру"
+)
+INVALID_LOGIN_AND_PASSWORD_MESSAGE = f"{INVALID_LOGIN_MESSAGE} {INVALID_PASSWORD_MESSAGE}"
+AUTHENTICATION_ERROR_MESSAGE = "Произошла ошибка при обработке запроса"
+
+
 @allure.label("layer", "UI Tests")
 @allure.epic("UI Automation")
 @allure.feature("Форма логина")
@@ -60,8 +70,10 @@ def test_non_existed_user_authorization(
     form.fill_password_field(password)
     form.click_login_button()
 
+    notification_text = form.get_notification_text()
+
     with allure.step("Проверить авторизацию несуществующего пользователя"):
-        assert form.non_existed_user_msg_is_displayed() is True, "Удалось авторизовать невалидного пользователя"
+        assert notification_text == AUTHENTICATION_ERROR_MESSAGE, "Неверное сообщение при входе с несуществующими данными"
 
 
 @allure.label("layer", "UI Tests")
@@ -90,10 +102,10 @@ def test_wrong_login_field_authorization(
     form.fill_password_field(password)
     form.click_login_button()
 
-    msg_is_displayed = form.wrong_login_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Авторизация прошла с некорректным логином"
+    with allure.step("Проверить текст уведомления об ошибке логина"):
+        assert notification_text == INVALID_LOGIN_MESSAGE, "Неверное сообщение об ошибке логина"
 
 
 @allure.label("layer", "UI Tests")
@@ -124,10 +136,10 @@ def test_wrong_password_field_authorization(
     form.fill_password_field(password)
     form.click_login_button()
 
-    msg_is_displayed = form.wrong_password_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Авторизация прошла с некорректным паролем"
+    with allure.step("Проверить текст уведомления об ошибке пароля"):
+        assert notification_text == INVALID_PASSWORD_MESSAGE, "Неверное сообщение об ошибке пароля"
 
 
 @allure.label("layer", "UI Tests")
@@ -158,7 +170,7 @@ def test_wrong_login_and_password_fields_authorization(
     form.fill_password_field(password)
     form.click_login_button()
 
-    msg_is_displayed = form.wrong_login_and_password_msg_is_displayed()
+    notification_text = form.get_notification_text()
 
-    with allure.step("Проверить отображение блока результатов"):
-        assert msg_is_displayed is True, "Авторизация прошла с некорректными данными"
+    with allure.step("Проверить текст уведомления об ошибках логина и пароля"):
+        assert notification_text == INVALID_LOGIN_AND_PASSWORD_MESSAGE, "Неверное сообщение об ошибках логина и пароля"

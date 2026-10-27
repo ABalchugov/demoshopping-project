@@ -1,8 +1,8 @@
 import allure
-from selenium.common import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from seleniumpagefactory.Pagefactory import PageFactory, ElementNotFoundException
+from seleniumpagefactory.Pagefactory import PageFactory
 from utils.config import TEST_UI_URL
 
 
@@ -16,13 +16,7 @@ class LoginPage(PageFactory):
             "login_locator": ('ID', "login-username"),
             "password_locator": ('ID', "login-password"),
             "login_button_locator": ('xpath', '//*[@id="login-form"]/button'),
-            "wrong_login_msg_locator": ('xpath',
-                                        "//div[text()='Логин должен содержать от 3 до 15 символов и может включать буквы, цифры и символы: _']"),
-            "wrong_password_msg_locator": ('xpath',
-                                           "//div[text()='Пароль должен содержать не менее 8 символов, включая минимум одну букву и одну цифру']"),
-            "wrong_login_and_password_msg_locator": ('xpath',
-                                                     "//div[contains(., 'Логин должен содержать от 3 до 15 символов') and contains(., 'Пароль должен содержать не менее 8 символов')]"),
-            "server_error_msg_locator": ('xpath', "//div[text()='Произошла ошибка при обработке запроса']"),
+            "notification_locator": ('css', 'div[style*="animation"]'),
         }
 
     @allure.step("Открыть форму")
@@ -41,41 +35,25 @@ class LoginPage(PageFactory):
     def click_login_button(self):
         self.login_button_locator.click()
 
-    @allure.step("Проверить сообщение об ошибке в поле Логин")
-    def wrong_login_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.wrong_login_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
+    @allure.step("Получить текст уведомления")
+    def get_notification_text(self, timeout=5) -> str:
+        locator_type, value = self.locators["notification_locator"]
+        locator = (self.TYPE_OF_LOCATORS[locator_type.lower()], value)
+        visible_notification = EC.visibility_of_element_located(locator)
 
-    @allure.step("Проверить сообщение об ошибке в поле Пароль")
-    def wrong_password_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.wrong_password_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
+        def read_visible_text(driver) -> str:
+            notification = visible_notification(driver)
+            return notification.text.strip() if notification else ""
 
-    @allure.step("Проверить сообщение об ошибке в полях Логин и Пароль")
-    def wrong_login_and_password_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.wrong_login_and_password_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
-
-    @allure.step("Проверить сообщение при попытке логина с несуществующими данными")
-    def non_existed_user_msg_is_displayed(self):
-        try:
-            return self.wait.until(
-                lambda driver: self.server_error_msg_locator.is_displayed()
-            )
-        except TimeoutException, ElementNotFoundException:
-            return False
+        return WebDriverWait(
+            self.driver,
+            timeout,
+            poll_frequency=0.1,
+            ignored_exceptions=(StaleElementReferenceException,),
+        ).until(
+            read_visible_text,
+            message="Не появилось видимое уведомление с текстом на странице входа",
+        )
 
     @allure.step("Проверить редирект при логине")
     def is_redirected(self):
@@ -84,5 +62,5 @@ class LoginPage(PageFactory):
                 EC.url_to_be(f"{TEST_UI_URL}/")
             )
             return True
-        except TimeoutException, ElementNotFoundException:
+        except TimeoutException:
             return False
