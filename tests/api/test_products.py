@@ -1,16 +1,10 @@
-import os
-
 import allure
 import requests
-from dotenv import load_dotenv
 from jsonschema import validate
 
 from helpers.products import create_product, delete_product
 from schemas.products_schema import products_schema
-
-load_dotenv()
-
-API_URL = os.getenv("TEST_API_URL")
+from utils.config import TEST_API_URL
 
 
 @allure.label("layer", "API Tests")
@@ -19,7 +13,7 @@ API_URL = os.getenv("TEST_API_URL")
 @allure.title("Получить список всех продуктов")
 @allure.severity(allure.severity_level.NORMAL)
 def test_get_products(attach_api):
-    response = requests.get(f"{API_URL}/products")
+    response = requests.get(f"{TEST_API_URL}/products")
 
     print("\nStatus code:", response.status_code)
     print("Headers:", response.headers)
@@ -37,13 +31,13 @@ def test_get_products(attach_api):
 @allure.title("Добавление нового продукта")
 @allure.severity(allure.severity_level.NORMAL)
 def test_add_product(attach_api):
-    response = create_product(API_URL)
+    response = create_product(TEST_API_URL)
     attach_api(response["original_response"])
     assert response["status"] == 200
     assert response["body"].startswith("Продукт успешно добавлен с ID:")
 
     product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
-    delete_response = delete_product(API_URL, product_id)
+    delete_response = delete_product(TEST_API_URL, product_id)
     attach_api(delete_response["original_response"])
     assert delete_response["status"] == 200
 
@@ -54,13 +48,13 @@ def test_add_product(attach_api):
 @allure.title("Удаление продукта по ID")
 @allure.severity(allure.severity_level.NORMAL)
 def test_delete_product(attach_api):
-    response = create_product(API_URL)
+    response = create_product(TEST_API_URL)
     attach_api(response["original_response"])
     assert response["status"] == 200
 
     product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
 
-    delete_response = delete_product(API_URL, product_id)
+    delete_response = delete_product(TEST_API_URL, product_id)
 
     attach_api(delete_response["original_response"])
     assert delete_response["status"] == 200
@@ -73,12 +67,12 @@ def test_delete_product(attach_api):
 @allure.title("Частичное обновление товара по ID")
 @allure.severity(allure.severity_level.NORMAL)
 def test_patch_product(attach_api):
-    response = create_product(API_URL)
+    response = create_product(TEST_API_URL)
     attach_api(response["original_response"])
     assert response["status"] == 200
 
     product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
-    patch_response = requests.patch(f"{API_URL}/products/id/{product_id}", json={"description": "Новое описание"})
+    patch_response = requests.patch(f"{TEST_API_URL}/products/id/{product_id}", json={"description": "Новое описание"})
 
     print("\nStatus code:", patch_response.status_code)
     print("Headers:", patch_response.headers)
@@ -88,7 +82,7 @@ def test_patch_product(attach_api):
     assert patch_response.status_code == 200
     assert patch_response.text == "Товар частично обновлён"
 
-    delete_response = delete_product(API_URL, product_id)
+    delete_response = delete_product(TEST_API_URL, product_id)
 
     attach_api(delete_response["original_response"])
     assert delete_response["status"] == 200

@@ -1,16 +1,12 @@
-import os
-
 import allure
 import requests
-from dotenv import load_dotenv
 from jsonschema import validate
 
 from schemas.base_response_schema import base_response_schema as success_registration_schema
 from schemas.registration_schema import registration_request_schema
+from utils.config import TEST_API_URL
 
-load_dotenv()
 
-API_URL = os.getenv("TEST_API_URL")
 USERNAME = "avbalchugov1"
 PASSWORD = "password1"
 
@@ -25,7 +21,7 @@ def test_successful_registration(attach_api):
     request_body = {"username": USERNAME, "password": PASSWORD}
     validate(request_body, schema=registration_request_schema)
 
-    response = requests.post(f"{API_URL}/register", json=request_body)
+    response = requests.post(f"{TEST_API_URL}/register", json=request_body)
 
     print("\nStatus code:", response.status_code)
     print("Headers:", response.headers)
@@ -38,7 +34,7 @@ def test_successful_registration(attach_api):
 
     assert body["message"] == 'Регистрация выполнена успешно'
 
-    response_users = requests.get(f"{API_URL}/users")
+    response_users = requests.get(f"{TEST_API_URL}/users")
 
     users_body = response_users.json()
 
@@ -51,6 +47,6 @@ def test_successful_registration(attach_api):
 
     assert user_id is not None, f"Пользователь с логином '{USERNAME}' не найден"
 
-    response_delete_user = requests.delete(f"{API_URL}/users/{user_id}")
+    response_delete_user = requests.delete(f"{TEST_API_URL}/users/{user_id}")
     attach_api(response_delete_user)
     assert response_delete_user.status_code is 200

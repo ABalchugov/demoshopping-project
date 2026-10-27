@@ -1,15 +1,11 @@
-import os
-
 import allure
 import requests
-from dotenv import load_dotenv
 from jsonschema import validate
 
 from schemas.login_schema import login_response_schema, login_request_schema
+from utils.config import TEST_API_URL
 
-load_dotenv()
 
-API_URL = os.getenv("TEST_API_URL")
 USERNAME = "avbalchugov12"
 PASSWORD = "password12"
 TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
@@ -25,7 +21,7 @@ def test_successful_auth(attach_api):
     request_body = {"username": USERNAME, "password": PASSWORD}
     validate(request_body, schema=login_request_schema)
 
-    response = requests.post(f"{API_URL}/login", json=request_body)
+    response = requests.post(f"{TEST_API_URL}/login", json=request_body)
 
     attach_api(response)
     print("\nStatus code:", response.status_code)
