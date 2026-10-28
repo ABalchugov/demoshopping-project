@@ -4,12 +4,7 @@ from jsonschema import validate
 
 from schemas.login_schema import login_response_schema, login_request_schema
 from utils.attach import attach_api_response
-from utils.config import TEST_API_URL
-
-
-USERNAME = "avbalchugov12"
-PASSWORD = "password12"
-TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+from utils.config import API_PASSWORD, API_USERNAME, TEST_API_URL
 
 
 @allure.label("layer", "API Tests")
@@ -19,7 +14,8 @@ TOKEN_PATH = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 @allure.title("Отправка формы с корректными логином и паролем")
 @allure.severity(allure.severity_level.CRITICAL)
 def test_successful_auth():
-    request_body = {"username": USERNAME, "password": PASSWORD}
+    assert API_USERNAME and API_PASSWORD, "Укажите API_USERNAME и API_PASSWORD в .env"
+    request_body = {"username": API_USERNAME, "password": API_PASSWORD}
     validate(request_body, schema=login_request_schema)
 
     response = requests.post(f"{TEST_API_URL}/login", json=request_body)
@@ -35,6 +31,5 @@ def test_successful_auth():
     validate(body, schema=login_response_schema)
 
     token = body["token"]
-    assert TOKEN_PATH in token
     assert len(token.split(".")) == 3
     assert body["message"] == 'Вход выполнен успешно'

@@ -4,6 +4,7 @@ import allure
 import pytest
 
 from pages.registration_page import RegistrationPage
+from utils.config import UI_PASSWORD
 
 
 INVALID_LOGIN_MESSAGE = (
@@ -27,14 +28,16 @@ REGISTRATION_SUCCESS_MESSAGE = "Регистрация выполнена усп
 @pytest.mark.parametrize(
     "login, password",
     [
-        (f"User{uuid4().hex[:11]}", "somepass1"),
+        (f"User{uuid4().hex[:11]}", UI_PASSWORD),
     ],
+    ids=["valid-registration"],
 )
 def test_positive_registration(
         driver,
         login,
         password,
 ):
+    assert UI_PASSWORD, "Укажите UI_PASSWORD в .env"
     form = RegistrationPage(driver)
 
     form.open()
@@ -59,14 +62,16 @@ def test_positive_registration(
 @pytest.mark.parametrize(
     "login, password",
     [
-        ("User!", "somepass1"),
+        ("User!", UI_PASSWORD),
     ],
+    ids=["invalid-login"],
 )
 def test_wrong_login_field_registration(
         driver,
         login,
         password,
 ):
+    assert UI_PASSWORD, "Укажите UI_PASSWORD в .env"
     form = RegistrationPage(driver)
 
     form.open()

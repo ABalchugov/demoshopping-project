@@ -2,6 +2,7 @@ import allure
 import pytest
 
 from pages.login_page import LoginPage
+from utils.config import UI_PASSWORD, UI_USERNAME
 
 
 INVALID_LOGIN_MESSAGE = (
@@ -25,14 +26,16 @@ AUTHENTICATION_ERROR_MESSAGE = "Произошла ошибка при обра�
 @pytest.mark.parametrize(
     "login, password",
     [
-        ("User171", "somepass1"),
+        (UI_USERNAME, UI_PASSWORD),
     ],
+    ids=["valid-credentials"],
 )
 def test_positive_authorization(
         driver,
         login,
         password,
 ):
+    assert UI_USERNAME and UI_PASSWORD, "Укажите UI_USERNAME и UI_PASSWORD в .env"
     form = LoginPage(driver)
 
     form.open()
@@ -55,14 +58,16 @@ def test_positive_authorization(
 @pytest.mark.parametrize(
     "login, password",
     [
-        ("Userjhs171", "somepass1"),
+        ("Userjhs171", UI_PASSWORD),
     ],
+    ids=["nonexistent-user"],
 )
 def test_non_existed_user_authorization(
         driver,
         login,
         password,
 ):
+    assert UI_PASSWORD, "Укажите UI_PASSWORD в .env"
     form = LoginPage(driver)
 
     form.open()
@@ -87,14 +92,16 @@ def test_non_existed_user_authorization(
 @pytest.mark.parametrize(
     "login, password",
     [
-        ("User!", "somepass1"),
+        ("User!", UI_PASSWORD),
     ],
+    ids=["invalid-login"],
 )
 def test_wrong_login_field_authorization(
         driver,
         login,
         password,
 ):
+    assert UI_PASSWORD, "Укажите UI_PASSWORD в .env"
     form = LoginPage(driver)
 
     form.open()
@@ -119,16 +126,18 @@ def test_wrong_login_field_authorization(
 @pytest.mark.parametrize(
     "login, password",
     [
-        ("User171", "pass1"),
-        ("User171", "somepass"),
-        ("User171", "123456789")
+        (UI_USERNAME, "pass1"),
+        (UI_USERNAME, "somepass"),
+        (UI_USERNAME, "123456789")
     ],
+    ids=["short-password", "password-without-digit", "password-without-letter"],
 )
 def test_wrong_password_field_authorization(
         driver,
         login,
         password,
 ):
+    assert UI_USERNAME, "Укажите UI_USERNAME в .env"
     form = LoginPage(driver)
 
     form.open()
