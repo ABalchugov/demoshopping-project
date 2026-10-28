@@ -34,14 +34,14 @@ def test_get_products():
 @allure.severity(allure.severity_level.NORMAL)
 def test_add_product():
     response = create_product(TEST_API_URL, ProductData.PRODUCT)
-    attach_api_response(response["original_response"])
-    assert response["status"] == 200
-    assert response["body"].startswith("Продукт успешно добавлен с ID:")
+    attach_api_response(response)
+    assert response.status_code == 200
+    assert response.text.startswith("Продукт успешно добавлен с ID:")
 
-    product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
+    product_id = int(response.text.replace("Продукт успешно добавлен с ID:", "").strip())
     delete_response = delete_product(TEST_API_URL, product_id)
-    attach_api_response(delete_response["original_response"])
-    assert delete_response["status"] == 200
+    attach_api_response(delete_response)
+    assert delete_response.status_code == 200
 
 
 @allure.label("layer", "API Tests")
@@ -51,16 +51,16 @@ def test_add_product():
 @allure.severity(allure.severity_level.NORMAL)
 def test_delete_product():
     response = create_product(TEST_API_URL, ProductData.PRODUCT)
-    attach_api_response(response["original_response"])
-    assert response["status"] == 200
+    attach_api_response(response)
+    assert response.status_code == 200
 
-    product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
+    product_id = int(response.text.replace("Продукт успешно добавлен с ID:", "").strip())
 
     delete_response = delete_product(TEST_API_URL, product_id)
 
-    attach_api_response(delete_response["original_response"])
-    assert delete_response["status"] == 200
-    assert delete_response["body"] == "Товар удалён"
+    attach_api_response(delete_response)
+    assert delete_response.status_code == 200
+    assert delete_response.text == "Товар удалён"
 
 
 @allure.label("layer", "API Tests")
@@ -70,10 +70,10 @@ def test_delete_product():
 @allure.severity(allure.severity_level.NORMAL)
 def test_patch_product():
     response = create_product(TEST_API_URL, ProductData.PRODUCT)
-    attach_api_response(response["original_response"])
-    assert response["status"] == 200
+    attach_api_response(response)
+    assert response.status_code == 200
 
-    product_id = int(response["body"].replace("Продукт успешно добавлен с ID:", "").strip())
+    product_id = int(response.text.replace("Продукт успешно добавлен с ID:", "").strip())
     patch_response = requests.patch(f"{TEST_API_URL}/products/id/{product_id}", json={"description": "Новое описание"})
 
     print("\nStatus code:", patch_response.status_code)
@@ -86,5 +86,5 @@ def test_patch_product():
 
     delete_response = delete_product(TEST_API_URL, product_id)
 
-    attach_api_response(delete_response["original_response"])
-    assert delete_response["status"] == 200
+    attach_api_response(delete_response)
+    assert delete_response.status_code == 200
