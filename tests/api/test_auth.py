@@ -21,10 +21,6 @@ def test_successful_auth():
     response = requests.post(f"{TEST_API_URL}/login", json=request_body)
 
     attach_api_response(response)
-    print("\nStatus code:", response.status_code)
-    print("Headers:", response.headers)
-    print("Body:", response.text)
-
     assert response.status_code == 200
 
     body = response.json()

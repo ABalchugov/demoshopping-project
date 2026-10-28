@@ -23,9 +23,6 @@ def test_successful_registration():
 
     response = requests.post(f"{TEST_API_URL}/register", json=request_body)
 
-    print("\nStatus code:", response.status_code)
-    print("Headers:", response.headers)
-    print("Body:", response.text)
     attach_api_response(response)
     assert response.status_code == 200
 

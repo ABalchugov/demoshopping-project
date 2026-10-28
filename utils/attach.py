@@ -79,6 +79,17 @@ def attach_api_response(response):
         attachment_type=allure.attachment_type.TEXT
     )
 
+    if response.headers:
+        allure.attach(
+            json.dumps(
+                dict(response.headers),
+                indent=4,
+                ensure_ascii=False
+            ),
+            name="Response headers",
+            attachment_type=allure.attachment_type.JSON
+        )
+
     try:
         allure.attach(
             json.dumps(

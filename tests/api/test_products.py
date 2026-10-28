@@ -17,9 +17,6 @@ from utils.products import create_product, delete_product
 def test_get_products():
     response = requests.get(f"{TEST_API_URL}/products")
 
-    print("\nStatus code:", response.status_code)
-    print("Headers:", response.headers)
-    print("Body:", response.text)
     attach_api_response(response)
     assert response.status_code == 200
 
@@ -75,10 +72,6 @@ def test_patch_product():
 
     product_id = int(response.text.replace("Продукт успешно добавлен с ID:", "").strip())
     patch_response = requests.patch(f"{TEST_API_URL}/products/id/{product_id}", json={"description": "Новое описание"})
-
-    print("\nStatus code:", patch_response.status_code)
-    print("Headers:", patch_response.headers)
-    print("Body:", patch_response.text)
 
     attach_api_response(patch_response)
     assert patch_response.status_code == 200
