@@ -44,13 +44,13 @@ def test_add_product_content(created_product):
     response = created_product
     prefix = "Продукт успешно добавлен с ID:"
     assert response.text.startswith(prefix)
-    product_id = response.text.replace(prefix, "", 1).strip()
-    assert product_id.isdecimal(), "В ответе создания отсутствует числовой ID товара"
+    created_id_text = response.text.replace(prefix, "", 1).strip()
+    assert created_id_text.isdecimal(), "В ответе создания отсутствует числовой ID товара"
 
     response_products = requests.get(f"{TEST_API_URL}/products")
     attach_api_response(response_products)
     response_products.raise_for_status()
-    products = [product for product in response_products.json() if product["product_id"] == int(product_id)]
+    products = [product for product in response_products.json() if product["product_id"] == int(created_id_text)]
     assert len(products) == 1, "Созданный продукт не найден или найден несколько раз"
 
     product = products[0]

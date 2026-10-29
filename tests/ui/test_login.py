@@ -4,7 +4,6 @@ import pytest
 from pages.login_page import LoginPage
 from utils.config import UI_PASSWORD, UI_USERNAME
 
-
 INVALID_LOGIN_MESSAGE = (
     "Логин должен содержать от 3 до 15 символов и может включать буквы, цифры и символы: _"
 )

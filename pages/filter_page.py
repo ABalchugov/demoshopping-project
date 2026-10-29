@@ -4,6 +4,7 @@ import allure
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumpagefactory.Pagefactory import PageFactory
+
 from utils.config import TEST_UI_URL
 
 

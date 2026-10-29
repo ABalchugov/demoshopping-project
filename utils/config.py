@@ -2,7 +2,6 @@ import os
 
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 TEST_UI_URL = os.getenv("TEST_UI_URL", "").rstrip("/")
