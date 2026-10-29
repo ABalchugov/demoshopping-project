@@ -11,7 +11,7 @@ from utils.config import API_REGISTRATION_USERNAME, TEST_API_URL
 @allure.epic("API Automation")
 @allure.feature("Форма регистрации")
 @allure.story("Успешная регистрация")
-@allure.title("Отправка формы с корректными логином и паролем")
+@allure.title("Проверка статуса и схемы ответа при регистрации")
 @allure.severity(allure.severity_level.CRITICAL)
 def test_successful_registration(registered_user):
     response = registered_user
@@ -20,6 +20,15 @@ def test_successful_registration(registered_user):
     body = response.json()
     validate(body, schema=success_registration_schema)
 
+
+@allure.label("layer", "API Tests")
+@allure.epic("API Automation")
+@allure.feature("Форма регистрации")
+@allure.story("Успешная регистрация")
+@allure.title("Проверка сообщения и созданного пользователя")
+@allure.severity(allure.severity_level.CRITICAL)
+def test_successful_registration_content(registered_user):
+    body = registered_user.json()
     assert body["message"] == 'Регистрация выполнена успешно'
 
     response_users = requests.get(f"{TEST_API_URL}/users")

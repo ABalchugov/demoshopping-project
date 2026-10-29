@@ -8,3 +8,4 @@ class ProductData:
         "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYLwvcBDB1Qn4UvFrL2zdEJRlBPxe76yVnfZG1mEhFYNtsXHKtddZXfK3X&s=10",
         "freeShipping": True,
     }
+    UPDATED_DESCRIPTION = "Новое описание"

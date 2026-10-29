@@ -3,9 +3,16 @@ import requests
 from jsonschema import validate
 
 from data.products import ProductData
+from schemas.login_schema import login_request_schema
 from schemas.registration_schema import registration_request_schema
 from utils.attach import attach_api_response
-from utils.config import API_REGISTRATION_PASSWORD, API_REGISTRATION_USERNAME, TEST_API_URL
+from utils.config import (
+    API_PASSWORD,
+    API_REGISTRATION_PASSWORD,
+    API_REGISTRATION_USERNAME,
+    API_USERNAME,
+    TEST_API_URL,
+)
 from utils.products import create_product, delete_product
 
 
@@ -21,6 +28,16 @@ def _cleanup_product(product_id):
     response = delete_product(TEST_API_URL, product_id)
     attach_api_response(response)
     assert response.status_code == 200, "Не удалось удалить товар при очистке после теста"
+
+
+@pytest.fixture
+def auth_response():
+    assert API_USERNAME and API_PASSWORD, "Укажите API_USERNAME и API_PASSWORD в .env"
+    request_body = {"username": API_USERNAME, "password": API_PASSWORD}
+    validate(request_body, schema=login_request_schema)
+    response = requests.post(f"{TEST_API_URL}/login", json=request_body)
+    attach_api_response(response)
+    return response
 
 
 @pytest.fixture
@@ -48,18 +65,36 @@ def product_id(created_product):
 
 
 @pytest.fixture
-def deleted_product(product_response):
+def product_to_delete(product_response):
     product_id = _get_product_id(product_response)
-    delete_response = None
     try:
         assert product_response.status_code == 200, "Не удалось создать товар для подготовки теста"
         assert product_id is not None, "В ответе подготовки отсутствует числовой ID товара"
-        delete_response = delete_product(TEST_API_URL, product_id)
-        attach_api_response(delete_response)
-        yield delete_response
+        yield product_id
     finally:
-        if product_id is not None and (delete_response is None or delete_response.status_code != 200):
-            _cleanup_product(product_id)
+        if product_id is not None:
+            response = requests.get(f"{TEST_API_URL}/products")
+            attach_api_response(response)
+            assert response.status_code == 200, "Не удалось проверить наличие товара при очистке после теста"
+            if any(product["product_id"] == product_id for product in response.json()):
+                _cleanup_product(product_id)
+
+
+@pytest.fixture
+def deleted_product(product_to_delete):
+    response = delete_product(TEST_API_URL, product_to_delete)
+    attach_api_response(response)
+    return response
+
+
+@pytest.fixture
+def patched_product(product_id):
+    response = requests.patch(
+        f"{TEST_API_URL}/products/id/{product_id}",
+        json={"description": ProductData.UPDATED_DESCRIPTION},
+    )
+    attach_api_response(response)
+    return response
 
 
 @pytest.fixture
